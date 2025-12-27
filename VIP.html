@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>پنل اختصاصی v2ray1_ng</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+  --bg-dark: linear-gradient(135deg,#1a0033,#2d004d,#0f001f);
+  --bg-light: linear-gradient(135deg,#fff3a0,#ffd000,#ffb300);
+  --card-dark: rgba(20,0,40,0.75);
+  --card-light: rgba(255,255,255,0.85);
+  --purple:#6a00ff;
+  --blue:#007bff;
+}
+body{
+  margin:0;
+  font-family:Tahoma,sans-serif;
+  background:var(--bg-dark);
+  color:#fff;
+  direction:rtl;
+  transition:.4s;
+  overflow-x:hidden;
+}
+body.light{
+  background:var(--bg-light);
+  color:#000;
+}
+
+/* background animation */
+.shapes span{
+  position:fixed;
+  width:80px;height:80px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  animation:float 16s linear infinite;
+  z-index:0;
+}
+@keyframes float{
+  0%{transform:translateY(0) rotate(0)}
+  50%{transform:translateY(-50px) rotate(180deg)}
+  100%{transform:translateY(0) rotate(360deg)}
+}
+.shapes span:nth-child(1){left:10%;top:70%}
+.shapes span:nth-child(2){left:80%;top:20%}
+.shapes span:nth-child(3){left:50%;top:90%}
+.shapes span:nth-child(4){left:30%;top:30%}
+.shapes span:nth-child(5){left:70%;top:60%}
+
+.container{
+  position:relative;
+  z-index:1;
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+/* header */
+.header{text-align:center;margin-bottom:30px;}
+.avatar{
+  width:120px;height:120px;border-radius:50%;
+  background:var(--purple);padding:4px;margin:auto;
+}
+.avatar-inner{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  background:#000;
+  background-image: url('https://i.ibb.co/HDXmtBfM/IMG-20251227-101927-600.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* card */
+.card{
+  background:var(--card-dark);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:25px;
+  border:1px solid var(--purple);
+}
+body.light .card{background:var(--card-light);}
+h3{margin-top:0;color:#d7a6ff}
+body.light h3{color:#000}
+
+/* neon download buttons */
+@keyframes blueGlow{
+  0%{box-shadow:0 0 5px #007bff}
+  50%{box-shadow:0 0 18px #007bff,0 0 35px #00bfff}
+  100%{box-shadow:0 0 5px #007bff}
+}
+.btn-group{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+}
+.download-btn{
+  flex:1;
+  min-width:160px;
+  padding:14px;
+  border-radius:14px;
+  text-decoration:none;
+  color:#fff;
+  background:var(--blue);
+  border:2px solid #000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-size:16px;
+  animation:blueGlow 2s infinite;
+  transition:.3s;
+}
+.download-btn:hover{transform:scale(1.05)}
+
+/* countries with copy */
+.countries-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.timer{
+  color:#ff00ff; /* سقز رنگ */
+  font-weight:bold;
+}
+.countries{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:10px;
+}
+.country{
+  background:#22003d;
+  padding:16px;
+  border-radius:14px;
+  text-align:center;
+  border:1px solid rgba(184,76,255,0.4);
+  cursor:pointer;
+  user-select:none;
+}
+body.light .country{background:#ffe680}
+
+/* copied message */
+.copied-msg{
+  display:none;
+  margin-top:10px;
+  text-align:center;
+  font-weight:bold;
+  color:#ff00ff; /* سقز رنگ */
+}
+
+/* guide buttons */
+.guide-buttons{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+}
+.guide-btn{
+  flex:1;
+  min-width:160px;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  background:var(--purple);
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* modal */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  z-index:1000;
+  align-items:center;
+  justify-content:center;
+}
+.modal-content{
+  background:var(--card-dark);
+  padding:25px;
+  border-radius:16px;
+  max-width:500px;
+  width:90%;
+}
+.close{cursor:pointer;color:red;text-align:left}
+
+/* floating buttons */
+.floating{
+  position:fixed;
+  width:65px;height:65px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  text-decoration:none;
+  color:#000;
+  z-index:999;
+}
+.join-btn{bottom:22px;left:22px;background:#007bff;}
+.support-btn{bottom:22px;right:22px;background:#007bff;}
+
+/* theme toggle */
+.theme-btn{
+  position:fixed;
+  top:18px;
+  left:18px;
+  padding:10px 18px;
+  border-radius:30px;
+  background:linear-gradient(135deg,#ffd000,#ff9f00);
+  color:#000;
+  font-size:14px;
+  font-weight:bold;
+  cursor:pointer;
+  z-index:999;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  box-shadow:0 0 15px rgba(255,200,0,.8);
+}
+
+/* footer */
+footer{
+  margin-top:40px;
+  padding:30px 15px;
+  text-align:center;
+}
+.footer-links{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.footer-links a{
+  color:#d7a6ff;
+  text-decoration:none;
+  font-size:14px;
+  position:relative;
+}
+.footer-links a::after{
+  content:'';
+  position:absolute;
+  left:0;
+  bottom:-4px;
+  width:0;
+  height:2px;
+  background:#8a2be2;
+  transition:.3s;
+}
+.footer-links a:hover::after{
+  width:100%;
+}
+body.light .footer-links a{color:#000}
+.footer-line{
+  width:180px;
+  height:2px;
+  margin:18px auto;
+  background:linear-gradient(90deg,transparent,#8a2be2,transparent);
+}
+.footer-copy{
+  font-size:13px;
+  opacity:.7;
+  margin-top:5px;
+}
+.footer-copy span{
+  color:#b266ff;
+  font-weight:bold;
+}
+body.light .footer-copy span{color:#000}
+</style>
+</head>
+
+<body>
+
+<div class="shapes">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="avatar"><div class="avatar-inner"></div></div>
+    <h2>پنل اختصاصی v2ray1_ng</h2>
+  </div>
+
+  <!-- دانلود -->
+  <div class="card">
+    <h3>دانلود برنامه v2ray</h3>
+    <div class="btn-group">
+      <a class="download-btn" href="https://github.com/2dust/v2rayNG/releases/latest" target="_blank">
+        <i class="fab fa-android"></i> اندروید
+      </a>
+      <a class="download-btn" href="https://github.com/2dust/v2rayN/releases/latest" target="_blank">
+        <i class="fab fa-windows"></i> ویندوز
+      </a>
+      <a class="download-btn" href="https://apps.apple.com/app/id6450534064" target="_blank">
+        <i class="fab fa-apple"></i> آیفون
+      </a>
+    </div>
+  </div>
+
+  <!-- کانفیگ -->
+  <div class="card">
+    <div class="countries-title">
+      <h3>دریافت کانفینگ‌ها</h3>
+      <span>(با یک کلیک کپی می‌شود)</span>
+      <span class="timer" id="timer"> </span>
+    </div>
+    <div class="countries">
+      <div class="country" onclick="copyConfig('russia')">🇷🇺 روسیه</div>
+      <div class="country" onclick="copyConfig('finland')">🇫🇮 فنلاند</div>
+      <div class="country" onclick="copyConfig('germany')">🇩🇪 آلمان</div>
+      <div class="country" onclick="copyConfig('poland')">🇵🇱 لهستان</div>
+      <div class="country" onclick="copyConfig('uk')">🇬🇧 بریتانیا</div>
+      <div class="country" onclick="copyConfig('netherlands')">🇳🇱 هلند</div>
+    </div>
+    <div class="copied-msg" id="copiedMsg">کپی شد ✅</div>
+  </div>
+
+  <!-- آموزش -->
+  <div class="card">
+    <h3>آموزش وارد کردن کانفیگ</h3>
+    <div class="guide-buttons">
+      <button class="guide-btn" onclick="openModal('android')">📱 اندروید</button>
+      <button class="guide-btn" onclick="openModal('ios')">🍎 آیفون</button>
+      <button class="guide-btn" onclick="openModal('windows')">💻 ویندوز</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- floating buttons -->
+<a class="floating join-btn" href="https://t.me/v2ray1_ng" target="_blank">
+  <i class="fab fa-telegram"></i>
+</a>
+
+<a class="floating support-btn" href="https://t.me/Leviko_pubg" target="_blank">
+  <i class="fas fa-headset"></i>
+</a>
+
+<div class="theme-btn" id="themeBtn" onclick="toggleTheme()">
+  🌙 حالت شب / روز
+</div>
+
+<!-- modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="close" onclick="closeModal()">✖</div>
+    <div id="modalText"></div>
+  </div>
+</div>
+
+<!-- footer -->
+<footer>
+  <div class="footer-links">
+    <a href="#" onclick="openFooterModal('privacy')">سیاست حریم خصوصی</a>
+    <a href="#" onclick="openFooterModal('terms')">شرایط استفاده</a>
+    <a href="#" onclick="openFooterModal('about')">درباره ما</a>
+    <a href="https://t.me/v2ray1_ng" target="_blank">کانال تلگرام</a>
+    <a href="https://t.me/Leviko_pubg" target="_blank">پشتیبانی</a>
+  </div>
+  <div class="footer-line"></div>
+  <div class="footer-copy">
+    © 2025 Developed by <span>Leviko_pubg</span>
+  </div>
+</footer>
+
+<script>
+const configs={
+  russia:"vless://77550287-7875-4b45-b03e-6968074a1f68@auth.cometatech.ru:8443?security=reality&encryption=none&pbk=fcPttS39Xqn_zD3p0tAhCf1kdiT5Si8B5kmYZE2xfhM&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=www.vk.com&sid=f99d367c4de3#%40V2ray1_ng%20%F0%9F%87%B7%F0%9F%87%BA",
+  finland:"vless://da616dac-b2a0-4cd5-b647-579f10bb5501@s1.tun.fin.cloudnsas.ir:443?security=none&encryption=none&headerType=none&type=tcp#%40V2ray1_ng%20%F0%9F%87%AB%F0%9F%87%AE",
+  germany:"vless://5075cf39-3dd8-4cc9-8cf3-adafae13293a@[2001:41d0:701:1000::72a]:13357?mode=gun&security=none&encryption=none&type=grpc&serviceName=ZEDMODEON-ZEDMODEON-bia-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON-ZEDMODEON#%40V2ray1_ng%20%F0%9F%87%A9%F0%9F%87%AA",
+  poland:"vless://3ee58d3a-7469-4557-b2f9-0d1d85c3a6fa@144.31.5.142:443?security=reality&encryption=none&pbk=ZqNF3CGI5QqAm5huC9sByjwxYd-6l5Pxc9-njmqqdl0&headerType=none&fp=qq&type=tcp&flow=xtls-rprx-vision&sni=google.com&sid=d4d39c5f8688dfe2#%40V2ray1_ng%20%F0%9F%87%B5%F0%9F%87%B1",
+  uk:"vless://ee122f13-9b54-49b6-abc5-aa47b464fdb3@173.245.59.217:443?path=%2Fyhowcws&security=tls&encryption=none&host=azizoarjmand.info&fp=chrome&type=ws&sni=azizoarjmand.info#%40V2ray1_ng%20%F0%9F%87%AC%F0%9F%87%A7",
+  netherlands:"vless://bcfd2b93-4dfd-42b5-9001-11e14c255761@nl5.tunnely.ru:443?security=reality&encryption=none&pbk=pPGE5Uacj1AGAB_WLOXB_UUnVBOmuJGH0vTSfmRBKzM&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=nl5.tunnely.ru&sid=2e40144ddc07e8e1#%40V2ray1_ng%20%F0%9F%87%B3%F0%9F%87%B1"
+};
+
+let copyAllowed=true;
+function copyConfig(country){
+  if(!copyAllowed) return;
+  const text=configs[country];
+  navigator.clipboard.writeText(text).then(()=>{
+    document.getElementById("copiedMsg").style.display="block";
+    copyAllowed=false;
+    let counter=30;
+    const timerEl=document.getElementById("timer");
+    timerEl.innerText=`${counter}s`;
+    const interval=setInterval(()=>{
+      counter--;
+      timerEl.innerText=`${counter}s`;
+      if(counter<=0){
+        clearInterval(interval);
+        copyAllowed=true;
+        timerEl.innerText='';
+        document.getElementById("copiedMsg").style.display="none";
+      }
+    },1000);
+  });
+}
+
+// modal functions
+const modalText=document.getElementById("modalText");
+function openModal(type){
+  const text={
+    android:"وارد برنامه v2rayng شوید، دکمه (+) بالا را بزنید، گزینه دوم را انتخاب کنید تا کانفیگ اضافه شود سپس روی تیک پایین صفحه بزنید.",
+    ios:"(+ ) بالای صفحه را بزنید، گزینه گرفتن از کلیپ‌بورد را انتخاب کنید، کانفیگ ظاهر می‌شود، روی آن بزنید و وصل شوید.",
+    windows:"وارد v2rayN شوید، Import → Import from Clipboard یا URL را بزنید، سپس Set as Active Server و اتصال را فعال کنید."
+  };
+  modalText.innerText=text[type];
+  document.getElementById("modal").style.display="flex";
+}
+function closeModal(){ document.getElementById("modal").style.display="none"; }
+function openFooterModal(type){
+  const texts={
+    privacy:"ما به حریم خصوصی کاربران احترام می‌گذاریم و هیچ اطلاعاتی ذخیره نمی‌شود.",
+    terms:"استفاده از این پنل به معنای پذیرش شرایط استفاده می‌باشد.",
+    about:"این پنل اختصاصی جهت مدیریت و توزیع کانفیگ‌های V2Ray طراحی شده است."
+  };
+  modalText.innerText=texts[type];
+  document.getElementById("modal").style.display="flex";
+}
+
+// theme
+function toggleTheme(){ document.body.classList.toggle("light"); }
+</script>
+
+</body>
+  </html>
