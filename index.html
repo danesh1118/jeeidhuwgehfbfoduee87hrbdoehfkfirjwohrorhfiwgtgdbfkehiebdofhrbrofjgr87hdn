@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل V2Ray - نسخه کامپکت</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4361ee;
+            --success: #06d6a0;
+            --danger: #ef476f;
+            --warning: #ffd166;
+            --gray: #6c757d;
+            --light: #f8f9fa;
+            --premium: linear-gradient(45deg, #f093fb, #f5576c);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 15px;
+        }
+
+        .compact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .card .value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 8px 0;
+            color: var(--primary);
+        }
+
+        .card .subtext {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .status-active { color: var(--success); }
+
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--success);
+            border-radius: 3px;
+        }
+
+        .actions-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .btn-small {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: #333; }
+
+        .btn-premium {
+            padding: 12px 24px;
+            background: var(--premium);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(240, 147, 251, 0.6);
+        }
+
+        .btn-premium i {
+            font-size: 1.3rem;
+        }
+
+        .servers-card {
+            grid-column: 1 / -1;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        .flag {
+            width: 24px;
+            height: 16px;
+            border-radius: 3px;
+            vertical-align: middle;
+        }
+
+        .copy-btn {
+            padding: 6px 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background: #3654d1;
+        }
+
+        footer {
+            background: #1a1a2e;
+            color: #aaa;
+            text-align: center;
+            padding: 12px;
+            font-size: 0.8rem;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .compact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+
+    <script>
+        // کانفیگ‌های اصلی
+        const realConfigs = [
+            "vless://2fb8808b-b94c-42ea-9dd2-cd77d2efcc8d@www.perplexity.ai:2096?path=%2FeyJqdW5rIjoidDZLaDRBMWhpIiwicHJvdG9jb2wiOiJ2bCIsIm1vZGUiOiJwcm94eXlwIiwicGFuZWxJUHMiOltdfQ%3D%3D%3Fed%3D2560&security=tls&alpn=http%2F1.1&encryption=none&host=digikalaa.dpdns.org&fp=chrome&type=ws&sni=DiGIkALaA.dpdns.ORG#%5B%F0%9F%87%A9%F0%9F%87%AA%5D%20VIP%20SERVER",
+            "vless://9be5679d-cd82-4ace-9fcf-bed31e21fadf@www.perplexity.ai:443?path=%2F43.218.77.16%3D1443&security=tls&encryption=none&host=tronblue.qzz.io&type=ws&sni=tronblue.qzz.io#%5B%F0%9F%87%AE%F0%9F%87%A9%5D%20VIP%20SERVER",
+            "vless://e23d87e4-77cd-430f-8769-9508880368c1@www.perplexity.ai:443?path=%2Freg%2Fabout%2Fproxyip%3Dkr.william.us.ci%3Fed%3D2560&security=tls&encryption=none&host=qmsdingyue.1949-10-01.top&type=ws&sni=qmsdingyue.1949-10-01.top#%5B%F0%9F%87%B0%F0%9F%87%B7%5D%20VIP%20SERVER",
+            "vless://f14daeff-923f-4ee9-f6ce-bcf0bf4d1d63@www.perplexity.ai:2096?path=%2F&security=tls&encryption=none&host=meiguo2.shuiwudengli.dpdns.org&type=ws&sni=meiguo2.shuiwudengli.dpdns.org#%5B%F0%9F%87%BA%F0%9F%87%B8%5D%20VIP%20SERVER",
+            "vless://c5b129d7-f133-4b34-a9c6-68c9a8f70248@www.perplexity.ai:80?path=%2F&security=none&encryption=none&host=EMotioNaL-peRMIsSiONf1bs65u5f4.EcOTOuRISs.Co.uK&type=ws#%5B%F0%9F%87%A8%F0%9F%87%A6%5D%20VIP%20SERVER",
+            "vless://876d731a-4615-4a26-a751-d303e12458b0@www.perplexity.ai:443?path=%2F77d76f3d-5da8-4198-b5d2-9634d3059ad0&security=tls&alpn=h2&encryption=none&host=menu.gejeh683bm.ir&fp=chrome&type=ws&sni=menu.gejeh683bm.ir#%5B%F0%9F%87%AB%F0%9F%87%AE%5D%20VIP%20SERVER",
+            "vless://1cf0ad1e-060b-42f9-b57d-eb0fe8ffbbe8@www.perplexity.ai:2096?path=%2F&security=tls&encryption=none&host=yinguo.shuiwudengli.dpdns.org&type=ws&sni=yinguo.shuiwudengli.dpdns.org#%5B%F0%9F%87%AC%F0%9F%87%A7%5D%20VIP%20SERVER"
+        ];
+
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isV2RayClient = userAgent.includes('v2ray') || 
+                              userAgent.includes('nekobox') || 
+                              userAgent.includes('streisand') || 
+                              userAgent.includes('v2rayn') || 
+                              userAgent.includes('hiddify') ||
+                              userAgent.includes('cloak') ||
+                              userAgent.includes('fair') ||
+                              userAgent.includes('v2rayng') ||
+                              userAgent.includes('nekoray') ||
+                              userAgent.includes('hiddifyng') ||
+                              userAgent.includes('hiddify-next') ||
+                              userAgent.includes('sing-box') ||
+                              userAgent.includes('xray');
+
+        if (isV2RayClient) {
+            const STORAGE_KEY_VOLUME = 'v2ray_period_volume';
+            const STORAGE_KEY_START = 'v2ray_period_start';
+
+            const MAX_VOLUME_MB = 100000 * 1024;
+            const PERIOD_MS = 30 * 24 * 60 * 60 * 1000;
+
+            let totalVolumeConsumed = 0;
+            let periodStartTime = 0;
+
+            const savedStart = localStorage.getItem(STORAGE_KEY_START);
+            const savedVolume = localStorage.getItem(STORAGE_KEY_VOLUME);
+
+            if (!savedStart) {
+                periodStartTime = Date.now();
+            } else {
+                periodStartTime = parseInt(savedStart);
+            }
+
+            totalVolumeConsumed = savedVolume ? parseFloat(savedVolume) : 0;
+
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - periodStartTime) / 1000);
+
+            let expectedConsumption = 0;
+            let seed = periodStartTime;
+
+            for (let i = 0; i < elapsedSeconds; i++) {
+                seed = (seed * 9301 + 49297) % 233280;
+                const randomOffset = (seed / 233280) * 21;
+                expectedConsumption += 40 + Math.floor(randomOffset);
+            }
+
+            totalVolumeConsumed = Math.min(expectedConsumption, MAX_VOLUME_MB);
+
+            const daysRemaining = Math.floor((PERIOD_MS - (now - periodStartTime)) / (1000 * 60 * 60 * 24));
+            const gbRemaining = ((MAX_VOLUME_MB - totalVolumeConsumed) / 1024).toFixed(3);
+
+            const infoConfig = `vless://00000000-0000-0000-0000-000000000000@0.0.0.0:443?encryption=none&security=none&type=none#حجم: ${gbRemaining} GB | زمان: ${daysRemaining} روز`;
+
+            const allConfigs = realConfigs;  // بدون infoConfig برای جلوگیری از خطا
+
+            document.open();
+            document.write(allConfigs.join('\n'));
+            document.close();
+        }
+    </script>
+
+    <div class="container">
+        <header>
+            <h1>پنل V2Ray - نسخه کامپکت</h1>
+            <p>مدیریت سریع اشتراک و سرورها</p>
+        </header>
+
+        <div class="main-content">
+            <div class="compact-grid">
+                <div class="card">
+                    <h3>حجم باقی‌مانده</h3>
+                    <div class="value" id="volume-remaining">100000.000 GB</div>
+                    <div class="progress-bar"><div class="progress" id="volume-progress" style="width:0%;"></div></div>
+                    <div class="subtext" id="volume-consumed-text">مصرف شده: 0.000 GB</div>
+                </div>
+
+                <div class="card">
+                    <h3>زمان باقی‌مانده اشتراک</h3>
+                    <div class="value" id="time-remaining">30 روز</div>
+                    <div class="subtext" id="time-detail">30 روز، 0 ساعت، 0 دقیقه، 0 ثانیه</div>
+                </div>
+
+                <div class="card">
+                    <h3>وضعیت</h3>
+                    <div class="value status-active">فعال</div>
+                    <div class="subtext">سرویس در حال کار</div>
+                </div>
+
+                <div class="card">
+                    <h3>سرعت متوسط</h3>
+                    <div class="value">48 Mbps</div>
+                    <div class="subtext">24 ساعت گذشته</div>
+                </div>
+            </div>
+
+            <div class="actions-row">
+                <button class="btn-small btn-primary" onclick="openSupport()">
+                    <i class="fas fa-headset"></i> پشتیبانی
+                </button>
+
+                <button class="btn-small btn-success" onclick="addToApp()">
+                    <i class="fas fa-mobile-alt"></i> اضافه به برنامه
+                </button>
+
+                <button class="btn-small btn-warning" onclick="showFAQ()">
+                    <i class="fas fa-question-circle"></i> سوالات متداول
+                </button>
+
+                <button class="btn-premium" onclick="showTutorial()">
+                    <i class="fas fa-book-open"></i> آموزش استفاده از پنل
+                </button>
+            </div>
+
+            <div class="compact-grid">
+                <div class="card servers-card">
+                    <h3>لیست سرورها</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>کشور</th>
+                                <th>پینگ</th>
+                                <th>بار</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>آلمان VIP</td>
+                                <td><img src="https://flagcdn.com/de.svg" class="flag" alt="DE"> آلمان</td>
+                                <td>32 ms</td>
+                                <td>28%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(0)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
+                                <td>اندونزی VIP</td>
+                                <td><img src="https://flagcdn.com/id.svg" class="flag" alt="ID"> اندونزی</td>
+                                <td>110 ms</td>
+                                <td>35%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(1)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
+                                <td>کره جنوبی VIP</td>
+                                <td><img src="https://flagcdn.com/kr.svg" class="flag" alt="KR"> کره جنوبی</td>
+                                <td>95 ms</td>
+                                <td>22%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(2)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
+                                <td>آمریکا VIP</td>
+                                <td><img src="https://flagcdn.com/us.svg" class="flag" alt="US"> آمریکا</td>
+                                <td>145 ms</td>
+                                <td>45%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(3)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
+                                <td>کانادا VIP</td>
+                                <td><img src="https://flagcdn.com/ca.svg" class="flag" alt="CA"> کانادا</td>
+                                <td>120 ms</td>
+                                <td>30%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(4)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
+                                <td>فینلند VIP</td>
+                                <td><img src="https://flagcdn.com/fi.svg" class="flag" alt="FI"> فینلند</td>
+                                <td>45 ms</td>
+                                <td>18%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(5)">کپی کانفیگ</button></td>
+                            </tr>
+                            <tr>
+                                <td>بریتانیا VIP</td>
+                                <td><img src="https://flagcdn.com/gb.svg" class="flag" alt="GB"> بریتانیا</td>
+                                <td>40 ms</td>
+                                <td>25%</td>
+                                <td><span class="status-active">فعال</span></td>
+                                <td><button class="copy-btn" onclick="copyConfig(6)">کپی کانفیگ</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; ۱۴۰۴ - پنل V2Ray کامپکت | پشتیبانی: support@panel.com</p>
+        </footer>
+    </div>
+
+    <script>
+        const copyConfigs = [
+            "vless://2fb8808b-b94c-42ea-9dd2-cd77d2efcc8d@www.perplexity.ai:2096?path=%2FeyJqdW5rIjoidDZLaDRBMWhpIiwicHJvdG9jb2wiOiJ2bCIsIm1vZGUiOiJwcm94eXlwIiwicGFuZWxJUHMiOltdfQ%3D%3D%3Fed%3D2560&security=tls&alpn=http%2F1.1&encryption=none&host=digikalaa.dpdns.org&fp=chrome&type=ws&sni=DiGIkALaA.dpdns.ORG#%5B%F0%9F%87%A9%F0%9F%87%AA%5D%20VIP%20SERVER",
+            "vless://9be5679d-cd82-4ace-9fcf-bed31e21fadf@www.perplexity.ai:443?path=%2F43.218.77.16%3D1443&security=tls&encryption=none&host=tronblue.qzz.io&type=ws&sni=tronblue.qzz.io#%5B%F0%9F%87%AE%F0%9F%87%A9%5D%20VIP%20SERVER",
+            "vless://e23d87e4-77cd-430f-8769-9508880368c1@www.perplexity.ai:443?path=%2Freg%2Fabout%2Fproxyip%3Dkr.william.us.ci%3Fed%3D2560&security=tls&encryption=none&host=qmsdingyue.1949-10-01.top&type=ws&sni=qmsdingyue.1949-10-01.top#%5B%F0%9F%87%B0%F0%9F%87%B7%5D%20VIP%20SERVER",
+            "vless://f14daeff-923f-4ee9-f6ce-bcf0bf4d1d63@www.perplexity.ai:2096?path=%2F&security=tls&encryption=none&host=meiguo2.shuiwudengli.dpdns.org&type=ws&sni=meiguo2.shuiwudengli.dpdns.org#%5B%F0%9F%87%BA%F0%9F%87%B8%5D%20VIP%20SERVER",
+            "vless://c5b129d7-f133-4b34-a9c6-68c9a8f70248@www.perplexity.ai:80?path=%2F&security=none&encryption=none&host=EMotioNaL-peRMIsSiONf1bs65u5f4.EcOTOuRISs.Co.uK&type=ws#%5B%F0%9F%87%A8%F0%9F%87%A6%5D%20VIP%20SERVER",
+            "vless://876d731a-4615-4a26-a751-d303e12458b0@www.perplexity.ai:443?path=%2F77d76f3d-5da8-4198-b5d2-9634d3059ad0&security=tls&alpn=h2&encryption=none&host=menu.gejeh683bm.ir&fp=chrome&type=ws&sni=menu.gejeh683bm.ir#%5B%F0%9F%87%AB%F0%9F%87%AE%5D%20VIP%20SERVER",
+            "vless://1cf0ad1e-060b-42f9-b57d-eb0fe8ffbbe8@www.perplexity.ai:2096?path=%2F&security=tls&encryption=none&host=yinguo.shuiwudengli.dpdns.org&type=ws&sni=yinguo.shuiwudengli.dpdns.org#%5B%F0%9F%87%AC%F0%9F%87%A7%5D%20VIP%20SERVER"
+        ];
+
+        function copyConfig(index) {
+            navigator.clipboard.writeText(copyConfigs[index]).then(() => {
+                alert('کانفیگ کپی شد!');
+            });
+        }
+
+        // Firebase config - جایگزین کن با config پروژه Firebase خودت (از console.firebase.google.com بگیر)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR_DATABASE_NAME.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // تایمر و حجم واقعی و جهانی
+        const MAX_VOLUME_MB = 100000 * 1024;
+        const PERIOD_MS = 30 * 24 * 60 * 60 * 1000;
+
+        let totalVolumeConsumed = 0;
+        let periodStartTime = 0;
+
+        async function loadData() {
+            const startRef = database.ref('v2ray/period_start');
+            const volumeRef = database.ref('v2ray/period_volume');
+
+            const savedStart = await startRef.once('value').then(snapshot => snapshot.val());
+            const savedVolume = await volumeRef.once('value').then(snapshot => snapshot.val());
+
+            if (!savedStart) {
+                periodStartTime = Date.now();
+                startRef.set(periodStartTime);
+                totalVolumeConsumed = 0;
+            } else {
+                periodStartTime = parseInt(savedStart);
+                totalVolumeConsumed = savedVolume ? parseFloat(savedVolume) : 0;
+            }
+        }
+
+        function saveVolume() {
+            database.ref('v2ray/period_volume').set(totalVolumeConsumed);
+        }
+
+        function calculateConsumption() {
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - periodStartTime) / 1000);
+
+            let expectedConsumption = 0;
+            let seed = periodStartTime;
+
+            for (let i = 0; i < elapsedSeconds; i++) {
+                seed = (seed * 9301 + 49297) % 233280;
+                const randomOffset = (seed / 233280) * 21;
+                expectedConsumption += 40 + Math.floor(randomOffset);
+            }
+
+            totalVolumeConsumed = Math.min(expectedConsumption, MAX_VOLUME_MB);
+            saveVolume();
+        }
+
+        function updateDisplay() {
+            const now = Date.now();
+            const timeRemaining = PERIOD_MS - (now - periodStartTime);
+
+            if (timeRemaining <= 0) {
+                document.getElementById('time-remaining').textContent = 'پایان یافته';
+                document.getElementById('time-detail').textContent = 'دوره تمام شد';
+                document.getElementById('volume-remaining').textContent = '0.000 GB';
+                document.getElementById('volume-consumed-text').textContent = 'مصرف شده: 100000.000 GB';
+                document.getElementById('volume-progress').style.width = '100%';
+                return;
+            }
+
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+            document.getElementById('time-remaining').textContent = `${days} روز`;
+            document.getElementById('time-detail').textContent = `${days} روز، ${hours} ساعت، ${minutes} دقیقه، ${seconds} ثانیه`;
+
+            const remainingGB = ((MAX_VOLUME_MB - totalVolumeConsumed) / 1024).toFixed(3);
+            const consumedGB = (totalVolumeConsumed / 1024).toFixed(3);
+
+            document.getElementById('volume-remaining').textContent = `${remainingGB} GB`;
+            document.getElementById('volume-consumed-text').textContent = `مصرف شده: ${consumedGB} GB`;
+
+            const progressPercent = (totalVolumeConsumed / MAX_VOLUME_MB) * 100;
+            document.getElementById('volume-progress').style.width = `${progressPercent}%`;
+        }
+
+        function openSupport() {
+            window.open('https://t.me/Leviko_pubg', '_blank');
+        }
+
+        function showFAQ() {
+            alert(
+                "سوالات متداول:\n\n" +
+                "۱. چطور کانفیگ رو به برنامه اضافه کنم؟\n" +
+                "از دکمه‌های «کپی کانفیگ» کنار هر سرور استفاده کنید و در برنامه Paste کنید.\n\n" +
+                "۲. چرا گاهی اتصال قطع می‌شه؟\n" +
+                "به خاطر فیلترینگ ممکنه بعضی سرورها موقتاً مشکل داشته باشن. سرور دیگه‌ای رو امتحان کنید.\n\n" +
+                "۳. بهترین برنامه برای اندروید چیه؟\n" +
+                "V2RayNG پیشنهاد می‌شه.\n\n" +
+                "۴. برای آیفون چی استفاده کنم؟\n" +
+                "Streisand عالیه.\n\n" +
+                "۵. چطور سرعت بهتری بگیرم؟\n" +
+                "سرور نزدیک به موقعیت جغرافیایی خودتون رو انتخاب کنید."
+            );
+        }
+
+        function showTutorial() {
+            alert(
+                "آموزش استفاده از پنل:\n\n" +
+                "۱. کنار هر سرور دکمه «کپی کانفیگ» رو بزنید.\n" +
+                "۲. کانفیگ کپی شده رو در برنامه V2RayNG، Nekobox یا هر برنامه دیگه Paste کنید.\n" +
+                "۳. حجم و زمان باقی‌مانده همیشه اینجا نمایش داده می‌شه.\n\n" +
+                "موفق باشید!"
+            );
+        }
+
+        function addToApp() {
+            alert('از دکمه‌های «کپی کانفیگ» کنار هر سرور استفاده کنید!');
+        }
+
+        // شروع
+        (async () => {
+            await loadData();
+            calculateConsumption();
+            updateDisplay();
+            setInterval(() => {
+                calculateConsumption();
+                updateDisplay();
+            }, 1000);
+        })();
+    </script>
+</body>
+</html>
