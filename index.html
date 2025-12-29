@@ -412,10 +412,9 @@
 
         const flagEmojis = ["🇩🇪", "🇮🇩", "🇰🇷", "🇺🇸", "🇨🇦", "🇫🇮", "🇬🇧"];
 
-        // تنظیمات
         const TOTAL_GB = 100000;
-        const INITIAL_VOLUME_MIN_GB = 3695;
-        const INITIAL_VOLUME_MAX_GB = 3998;
+        const INITIAL_CONSUMED_MIN_GB = 3695;
+        const INITIAL_CONSUMED_MAX_GB = 3998;
         const INITIAL_REMAINING_DAYS = 29;
         const INITIAL_REMAINING_HOURS = 2;
         const PERIOD_DAYS = 30;
@@ -439,37 +438,33 @@
             const now = Date.now();
 
             if (!savedStart) {
-                // اولین بار — حجم رندم دقیق با 3 رقم اعشار
-                const randomGB = INITIAL_VOLUME_MIN_GB + Math.random() * (INITIAL_VOLUME_MAX_GB - INITIAL_VOLUME_MIN_GB + 0.001);
-                const initialRemainingGB = Math.round(randomGB * 1000) / 1000; // دقیق 3 رقم اعشار
-                const initialRemainingMB = initialRemainingGB * 1024;
+                // اولین بار — حجم مصرف شده رندم بین 3695 تا 3998 گیگ با 3 رقم اعشار
+                const randomConsumedGB = INITIAL_CONSUMED_MIN_GB + Math.random() * (INITIAL_CONSUMED_MAX_GB - INITIAL_CONSUMED_MIN_GB + 0.001);
+                const initialConsumedGB = Math.round(randomConsumedGB * 1000) / 1000;
+                totalConsumedMB = initialConsumedGB * 1024;
 
-                // زمان شروع: 29 روز و 2 ساعت باقی‌مانده
+                // زمان شروع برای 29 روز و 2 ساعت باقی‌مانده
                 const passedMs = (PERIOD_DAYS - INITIAL_REMAINING_DAYS - 1) * 24 * 60 * 60 * 1000 + (24 - INITIAL_REMAINING_HOURS) * 60 * 60 * 1000;
                 periodStartTime = now - passedMs;
 
-                totalConsumedMB = (TOTAL_GB * 1024) - initialRemainingMB;
                 lastUpdateTime = now;
             } else {
                 periodStartTime = parseInt(savedStart);
                 totalConsumedMB = parseFloat(savedConsumed) || 0;
                 lastUpdateTime = parseInt(savedLast) || periodStartTime;
 
-                // اگر دوره تموم شده، دوباره با مقادیر جدید شروع کن
                 if (now - periodStartTime >= PERIOD_MS) {
-                    const randomGB = INITIAL_VOLUME_MIN_GB + Math.random() * (INITIAL_VOLUME_MAX_GB - INITIAL_VOLUME_MIN_GB + 0.001);
-                    const initialRemainingGB = Math.round(randomGB * 1000) / 1000;
-                    const initialRemainingMB = initialRemainingGB * 1024;
+                    const randomConsumedGB = INITIAL_CONSUMED_MIN_GB + Math.random() * (INITIAL_CONSUMED_MAX_GB - INITIAL_CONSUMED_MIN_GB + 0.001);
+                    const initialConsumedGB = Math.round(randomConsumedGB * 1000) / 1000;
+                    totalConsumedMB = initialConsumedGB * 1024;
 
                     const passedMs = (PERIOD_DAYS - INITIAL_REMAINING_DAYS - 1) * 24 * 60 * 60 * 1000 + (24 - INITIAL_REMAINING_HOURS) * 60 * 60 * 1000;
                     periodStartTime = now - passedMs;
 
-                    totalConsumedMB = (TOTAL_GB * 1024) - initialRemainingMB;
                     lastUpdateTime = now;
                 }
             }
 
-            // مصرف آفلاین
             const elapsedSec = (now - lastUpdateTime) / 1000;
             if (elapsedSec > 0) {
                 const rate = CONSUMPTION_MIN + Math.random() * (CONSUMPTION_MAX - CONSUMPTION_MIN);
