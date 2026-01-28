@@ -47,7 +47,7 @@
           "network": "ws",
           "security": "tls",
           "wsSettings": {
-            "path": "/?ed=#TELEGRAM-YamYamProxy_YamYamProxy_YamYamProxy_YamYamProxy_YamYamProxy?ed=512",
+            "path": "/?ed=#TELEGRAM-napsternet2?ed=512",
             "headers": {
               "Host": "r4fnviw9jl4i4rx.zjde5.de5.net"
             }
@@ -350,6 +350,176 @@
           ],
           "outboundTag": "direct",
           "port": "53"
+        }
+      ]
+    }
+  },
+  {
+    "remarks": "🇦🇩",
+    "log": {
+      "loglevel": "warning"
+    },
+    "inbounds": [
+      {
+        "tag": "socks",
+        "port": 10808,
+        "protocol": "socks",
+        "settings": {
+          "auth": "noauth",
+          "udp": true,
+          "userLevel": 8
+        },
+        "sniffing": {
+          "enabled": true,
+          "destOverride": [
+            "http",
+            "tls"
+          ],
+          "routeOnly": false
+        }
+      }
+    ],
+    "outbounds": [
+      {
+        "tag": "proxy",
+        "protocol": "vless",
+        "settings": {
+          "vnext": [
+            {
+              "address": "188.114.98.0",
+              "port": 443,
+              "users": [
+                {
+                  "id": "adaa4ecc-6d82-49c6-9b01-14f6f8e00e08",
+                  "level": 8,
+                  "encryption": "none"
+                }
+              ]
+            }
+          ]
+        },
+        "streamSettings": {
+          "network": "ws",
+          "security": "tls",
+          "wsSettings": {
+            "path": "/",
+            "headers": {
+              "Host": "BuPwFrVsD0.gIgAcOnFaPp.InFo"
+            }
+          },
+          "tlsSettings": {
+            "serverName": "BuPwFrVsD0.gIgAcOnFaPp.InFo",
+            "allowInsecure": false
+          }
+        },
+        "mux": {
+          "enabled": false
+        }
+      },
+      {
+        "tag": "direct",
+        "protocol": "freedom"
+      },
+      {
+        "tag": "block",
+        "protocol": "blackhole"
+      }
+    ],
+    "dns": {
+      "servers": [
+        "1.1.1.1"
+      ]
+    },
+    "routing": {
+      "domainStrategy": "IPIfNonMatch",
+      "rules": [
+        {
+          "type": "field",
+          "outboundTag": "proxy",
+          "network": "tcp,udp"
+        }
+      ]
+    }
+  },
+  {
+    "remarks": "🇨🇦",
+    "log": {
+      "loglevel": "warning"
+    },
+    "inbounds": [
+      {
+        "tag": "socks",
+        "port": 10808,
+        "protocol": "socks",
+        "settings": {
+          "auth": "noauth",
+          "udp": true,
+          "userLevel": 8
+        },
+        "sniffing": {
+          "enabled": true,
+          "destOverride": [
+            "http",
+            "tls"
+          ],
+          "routeOnly": false
+        }
+      }
+    ],
+    "outbounds": [
+      {
+        "tag": "proxy",
+        "protocol": "vless",
+        "settings": {
+          "vnext": [
+            {
+              "address": "104.18.32.47",
+              "port": 80,
+              "users": [
+                {
+                  "id": "860d8f27-ed60-4791-b6a0-e1e471d7ee6d",
+                  "level": 8,
+                  "encryption": "none"
+                }
+              ]
+            }
+          ]
+        },
+        "streamSettings": {
+          "network": "ws",
+          "security": "none",
+          "wsSettings": {
+            "path": "/?ed",
+            "headers": {
+              "Host": "NICE-MaNAgEmeNts6CV0rMC2T.ONeEat.co."
+            }
+          }
+        },
+        "mux": {
+          "enabled": false
+        }
+      },
+      {
+        "tag": "direct",
+        "protocol": "freedom"
+      },
+      {
+        "tag": "block",
+        "protocol": "blackhole"
+      }
+    ],
+    "dns": {
+      "servers": [
+        "1.1.1.1"
+      ]
+    },
+    "routing": {
+      "domainStrategy": "IPIfNonMatch",
+      "rules": [
+        {
+          "type": "field",
+          "outboundTag": "proxy",
+          "network": "tcp,udp"
         }
       ]
     }
